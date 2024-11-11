@@ -2,7 +2,7 @@ name: tf-action
 on:
     workflow_call:
 env:
-    TF_LOG: INFO
+    TF_LOG: ERROR
     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
