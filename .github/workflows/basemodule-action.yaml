@@ -21,10 +21,6 @@ env:
 jobs:
     TerraformBuild:
         runs-on: ubuntu-latest
-        defaults:
-            run:
-              shell: bash
-              working-directory: az-tf-base
         steps:
             - name: Get code
               uses: actions/checkout@v4
