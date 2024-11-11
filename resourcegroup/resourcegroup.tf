@@ -22,6 +22,6 @@ variable "resource_groups" {
 }
 
 module "base_rg" {
-  source          = "git::https://github.com/Devacc29/terragrunt-module.git//modules/resourcegroup"
+  source          = "git::https://github.com/Devacc29/ACEO-MODULES.git//resourcegroup"
   resource_groups = var.resource_groups
 }
