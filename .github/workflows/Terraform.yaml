@@ -21,7 +21,9 @@ jobs:
               run: terraform init 
               
             - name: Terraform Format
-              run: terraform fmt --recursive
+              run: |
+                ls -Flah
+                terraform fmt --recursive
         
             - name: Terraform Validate
               id: valid
