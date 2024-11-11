@@ -19,29 +19,17 @@ env:
     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 jobs:
-    TerraformBuild:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Get code
-              uses: actions/checkout@v4
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v3
-              with:
-                terraform_version: 1.9.8
-            - name: Terraform Init
-              run: terraform init 
-              
-            - name: Terraform Format
-              run: terraform fmt --recursive
-        
-            - name: Terraform Validate
-              id: valid
-              run: terraform validate
-              
-            - name: Terraform Plan
-              if: success() && steps.valid.outcome == 'success'
-              id: plan
-              run: terraform plan 
-
-            - name: Terraform Apply
-              run: terraform apply -auto-approve
+    ResourceGroup:
+      uses: ./.github/workflows/Terraform.yaml
+      
+      
+      # jobs:
+      #   build:
+      #     runs-on: ubuntu-latest
+      #     steps:
+      #     - uses: actions/checkout@v2
+      #     - name: Run a multi-line script
+      #       run: |
+      #         echo Add your commands here
+      #         echo Use a new line for each command
+      #       working-directory: repo     
