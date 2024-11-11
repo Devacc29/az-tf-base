@@ -12,6 +12,12 @@ on:
     paths-ignore:
       - '.github/workflows/*'
   workflow_dispatch:
+env:
+    TF_LOG: INFO
+    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+    ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 jobs:
     TerraformBuild:
         runs-on: ubuntu-latest
@@ -40,6 +46,6 @@ jobs:
               if: success() && steps.valid.outcome == 'success'
               id: plan
               run: terraform plan 
-              
+
             - name: Terraform Apply
               run: terraform apply -auto-approve
