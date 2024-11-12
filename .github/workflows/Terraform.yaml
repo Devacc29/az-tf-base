@@ -37,7 +37,7 @@ jobs:
               if: success() && steps.valid.outcome == 'success'
               id: plan
               run: |
-                cd  ${{ inputs.calling_job_name }}"
+                cd  ${{ inputs.calling_job_name }}
                 terraform plan 
 
             - name: Terraform Apply
