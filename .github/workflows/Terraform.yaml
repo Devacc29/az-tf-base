@@ -24,7 +24,9 @@ jobs:
               with:
                 terraform_version: 1.9.8
             - name: Terraform Init
-              run: terraform init 
+              run: |
+                ls -Flah
+                terraform init 
               
             - name: Terraform Format
               run: |
