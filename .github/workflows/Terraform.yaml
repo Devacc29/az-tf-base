@@ -1,70 +1,58 @@
-name: tf-action
+name: Terraform Workflow
+
 on:
   workflow_call:
     inputs:
       calling_job_name:
         required: true
         type: string
-      arm_client_id:
-        required: true
-        type: string
-      arm_client_secret:
-        required: true
-        type: string
-      arm_subscription_id:
-        required: true
-        type: string
-      arm_tenant_id:
-        required: true
-        type: string
+      # arm_client_id:
+      #   required: true
+      #   type: string
+      # arm_client_secret:
+      #   required: true
+      #   type: string
+      # arm_subscription_id:
+      #   required: true
+      #   type: string
+      # arm_tenant_id:
+      #   required: true
+      #   type: string
 
 jobs:
-  Terraform:
+  terraform:
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: ${{ inputs.calling_job_name }}
-      ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ inputs.arm_client_secret }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
-      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
+      # ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
+      # ARM_CLIENT_SECRET: ${{ inputs.arm_client_secret }}
+      # ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+      # ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.4
 
-      - name: Change to working directory
-        run: cd ${{ env.WORKING_DIR }} && pwd  # This changes to the specified directory
-
       - name: Terraform Init
-        run: |
-          cd ${{ env.WORKING_DIR }} 
-          terraform init 
+        run: terraform init 
 
       - name: Terraform Format
-        run: |
-          cd ${{ env.WORKING_DIR }} 
-          terraform fmt --recursive
+        run: terraform fmt --recursive
 
       - name: Terraform Validate
         id: valid
-        run: |
-          cd ${{ env.WORKING_DIR }}
-          terraform validate
+        run: terraform validate
 
       - name: Terraform Plan
         if: success() && steps.valid.outcome == 'success'
         id: plan
-        run: |
-          cd ${{ env.WORKING_DIR }}  
-          terraform plan 
+        run: terraform plan 
 
       - name: Terraform Apply
         if: success() && steps.plan.outcome == 'success'
-        run: |
-          cd ${{ env.WORKING_DIR }} 
-          terraform apply -auto-approve
+        run: terraform apply -auto-approve
