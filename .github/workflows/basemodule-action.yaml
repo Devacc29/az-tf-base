@@ -19,8 +19,20 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 jobs:
-    resourcegroup:
-      uses: ./.github/workflows/Terraform.yaml
-      with:
-        calling_job_name: resourcegroup
+    job1:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          job_name: [resourcegroup] 
+      steps:
+        - name: calling flow
+          uses: ./.github/workflows/Terraform.yaml
+          with:
+            calling_job_name: ${{ matrix.job_name }}
+            arm_client_id: ${{ env.ARM_CLIENT_ID }}
+            arm_client_secret: ${{ env.ARM_CLIENT_SECRET }}
+            arm_subscription_id: ${{ env.ARM_SUBSCRIPTION_ID }}
+            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+          
+          
             

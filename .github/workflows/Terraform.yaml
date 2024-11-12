@@ -5,17 +5,27 @@ on:
         calling_job_name:
           required: true
           type: string
-env:
-    TF_LOG: ERROR
-    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-    ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-    ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        arm_client_id:
+            required: true
+            type: string
+        arm_client_secret:
+            required: true
+            type: string
+        arm_subscription_id:
+            required: true
+            type: string
+        arm_tenant_id:
+            required: true
+            type: string
 jobs:
     Terraform:
         runs-on: ubuntu-latest
         env:
             WORKING_DIR: ${{ inputs.calling_job_name }}
+            ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
+            ARM_CLIENT_SECRET: ${{ inputs.arm_client_secret }}
+            ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+            ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
         steps:
             - name: Get code
               uses: actions/checkout@v4
