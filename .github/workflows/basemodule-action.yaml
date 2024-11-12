@@ -25,6 +25,8 @@ jobs:
         matrix:
           job_name: [resourcegroup] 
       steps:
+        - name: Get code
+          uses: actions/checkout@v4
         - name: calling flow
           uses: ./.github/workflows/Terraform.yaml
           with:
