@@ -14,6 +14,8 @@ env:
 jobs:
     Terraform:
         runs-on: ubuntu-latest
+        env:
+            WORKING_DIR: ${{ inputs.calling_job_name }}
         steps:
             - name: Get code
               uses: actions/checkout@v4
@@ -36,9 +38,7 @@ jobs:
             - name: Terraform Plan
               if: success() && steps.valid.outcome == 'success'
               id: plan
-              run: |
-                cd  ${{ inputs.calling_job_name }}
-                terraform plan 
+              run: terraform plan 
 
             - name: Terraform Apply
               if: success() && steps.plan.outcome == 'success'
