@@ -14,5 +14,8 @@ on:
   workflow_dispatch:
 
 jobs:
-    ResourceGroup:
+    resourcegroup:
       uses: ./.github/workflows/Terraform.yaml
+      with:
+        calling_job_name: resourcegroup
+            

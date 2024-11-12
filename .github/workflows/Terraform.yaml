@@ -1,6 +1,10 @@
 name: tf-action
 on:
     workflow_call:
+      inputs:
+        calling_job_name:
+          required: true
+          type: string
 env:
     TF_LOG: ERROR
     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -32,7 +36,9 @@ jobs:
             - name: Terraform Plan
               if: success() && steps.valid.outcome == 'success'
               id: plan
-              run: terraform plan 
+              run: |
+                cd  ${{ inputs.calling_job_name }}"
+                terraform plan 
 
             - name: Terraform Apply
               if: success() && steps.plan.outcome == 'success'
