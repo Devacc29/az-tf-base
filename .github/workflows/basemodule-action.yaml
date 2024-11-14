@@ -1,62 +1,62 @@
-name: Base-Module-tf-action
-on:
-  pull_request:
-    types:
-      - closed
-      - opened
-    branches:
-      - main
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.github/workflows/*'
-  workflow_dispatch:
-    inputs:
-      target_directory:
-        description: 'Specify a directory to run'
-        required: true
-        default: 'resourcegroup'  # Choose the directory to run, e.g., dir1, dir2, etc.
+# name: Base-Module-tf-action
+# on:
+#   pull_request:
+#     types:
+#       - closed
+#       - opened
+#     branches:
+#       - main
+#   push:
+#     branches:
+#       - main
+#     paths-ignore:
+#       - '.github/workflows/*'
+#   workflow_dispatch:
+#     inputs:
+#       target_directory:
+#         description: 'Specify a directory to run'
+#         required: true
+#         default: 'resourcegroup'  # Choose the directory to run, e.g., dir1, dir2, etc.
 
-env:
-  TF_LOG: ERROR
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+# env:
+#   TF_LOG: ERROR
+#   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+#   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+#   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+#   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
-jobs:
-            selective-loop:
-              runs-on: ubuntu-latest
-              strategy:
-                matrix:
-                  dir: [{{github.event.inputs.target_directory}}]
+# jobs:
+#             selective-loop:
+#               runs-on: ubuntu-latest
+#               strategy:
+#                 matrix:
+#                   dir: [{{github.event.inputs.target_directory}}]
           
-              steps:
-                      - name: Checkout code
-                        uses: actions/checkout@v2
+#               steps:
+#                       - name: Checkout code
+#                         uses: actions/checkout@v2
                 
-                      - name: Setup Terraform
-                        uses: hashicorp/setup-terraform@v3
-                        with:
-                          terraform_version: 1.9.8
+#                       - name: Setup Terraform
+#                         uses: hashicorp/setup-terraform@v3
+#                         with:
+#                           terraform_version: 1.9.8
                 
-                      - name: Terraform Init
-                        working-directory: ${{ github.event.inputs.target_directory }}
-                        run: |
-                          ls -Flah
-                          terraform init 
+#                       - name: Terraform Init
+#                         working-directory: ${{ github.event.inputs.target_directory }}
+#                         run: |
+#                           ls -Flah
+#                           terraform init 
                 
-                      - name: Terraform Validate
-                        id: valid
-                        run: terraform validate
+#                       - name: Terraform Validate
+#                         id: valid
+#                         run: terraform validate
                 
-                      - name: Terraform Plan
-                        if: success() && steps.valid.outcome == 'success'
-                        id: plan
-                        run: terraform plan 
+#                       - name: Terraform Plan
+#                         if: success() && steps.valid.outcome == 'success'
+#                         id: plan
+#                         run: terraform plan 
                 
-                      - name: Terraform Apply
-                        if: success() && steps.plan.outcome == 'success'
-                        run: terraform apply -auto-approve
+#                       - name: Terraform Apply
+#                         if: success() && steps.plan.outcome == 'success'
+#                         run: terraform apply -auto-approve
                 

@@ -24,5 +24,6 @@ jobs:
         working-directory: ${{ matrix.dir }}
         run: |
           echo "Running in ${{ matrix.dir }}"
+          ls -Flah
           terraform init
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var-file=${{ matrix.dir }}.tfvars

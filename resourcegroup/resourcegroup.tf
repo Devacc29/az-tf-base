@@ -20,3 +20,4 @@ module "base_rg" {
   source          = "git::https://github.com/Devacc29/ACEO-MODULES.git//resourcegroup"
   resource_groups = var.resource_groups
 }
+
