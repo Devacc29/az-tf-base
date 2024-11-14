@@ -30,9 +30,7 @@ jobs:
               runs-on: ubuntu-latest
               strategy:
                 matrix:
-                  dir: [resourcegroup, dir2, dir3]
-                  include:
-                    - dir: dir2
+                  dir: [{{github.event.inputs.target_directory}}]
           
               steps:
                       - name: Checkout code
@@ -44,8 +42,7 @@ jobs:
                           terraform_version: 1.9.8
                 
                       - name: Terraform Init
-                        if: ${{ matrix.dir == github.event.inputs.target_directory }}
-                        working-directory: ${{ matrix.dir }}
+                        working-directory: ${{ github.event.inputs.target_directory }}
                         run: |
                           ls -Flah
                           terraform init 
