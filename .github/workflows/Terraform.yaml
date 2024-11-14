@@ -24,39 +24,43 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: ${{ inputs.calling_job_name }}
-      ARM_CLIENT_ID: ${{ inputs.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ inputs.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ inputs.ARM_TENANT_ID }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ inputs.ARM_CLIENT_ID }}
+          client-secret: ${{ inputs.ARM_CLIENT_SECRET }}
+          tenant-id: ${{ inputs.ARM_TENANT_ID }}
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.4
+          terraform_version: 1.9.8
 
       - name: Terraform Init
-        run: |
-          ls -Flah
-          terraform init 
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform init 
 
       - name: Terraform Format
-        run: |
-          ls -Flah
-          terraform fmt --recursive
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform fmt --recursive
 
       - name: Terraform Validate
+        working-directory: ${{ env.WORKING_DIR }}
         id: valid
         run: terraform validate
 
       - name: Terraform Plan
         if: success() && steps.valid.outcome == 'success'
+        working-directory: ${{ env.WORKING_DIR }}
         id: plan
         run: terraform plan 
 
       - name: Terraform Apply
         if: success() && steps.plan.outcome == 'success'
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform apply -auto-approve
