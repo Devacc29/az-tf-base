@@ -1,3 +1,4 @@
+resource_groups={
 rg1 = {
   name     = "dev-rg-03-pipe"
   location = "eastus2"
@@ -5,4 +6,5 @@ rg1 = {
     env        = "dev"
     created_by = "1234@gmail.com"
   }
+}
 }

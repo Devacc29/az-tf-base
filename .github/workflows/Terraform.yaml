@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       target_directory:
-        description: 'Specify which directory to run (e.g., dir1, dir2, etc.)'
+        description: 'Specify which directory to run (e.g., resourcegroup, vnet, storage.)'
         required: true
         default: 'resourcegroup'
 
@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dir: [resourcegroup, vnet, storage]  # List all possible directories
+        #dir: [resourcegroup, vnet, storage]  # List all possible directories
+        dir: [ github.event.inputs.target_directory ]
 
     steps:
       - name: Checkout code
