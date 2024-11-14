@@ -1,12 +1,29 @@
-name: Run Specific Directory
+name: Terraform on Specific Directory
 
 on:
+  pull_request:
+    types:
+      - closed
+      - opened
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/*'
   workflow_dispatch:
     inputs:
       target_directory:
         description: 'Specify which directory to run (e.g., resourcegroup, vnet, storage.)'
         required: true
         default: 'resourcegroup'
+env:
+  TF_LOG: ERROR
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
   run-specific-dir:
