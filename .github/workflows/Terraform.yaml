@@ -13,8 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #dir: [resourcegroup, vnet, storage]  # List all possible directories
-        dir: [ ${{github.event.inputs.target_directory}} ]
+        dir: [resourcegroup, vnet, storage]  # List all possible directories
 
     steps:
       - name: Checkout code
