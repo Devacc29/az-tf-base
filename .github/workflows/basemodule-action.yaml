@@ -12,16 +12,54 @@ on:
     paths-ignore:
       - '.github/workflows/*'
   workflow_dispatch:
+    inputs:
+      target_directory:
+        description: 'Specify a directory to run'
+        required: true
+        default: 'resourcegroup'  # Choose the directory to run, e.g., dir1, dir2, etc.
 
 env:
   TF_LOG: ERROR
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
-  resourcegroup:
-        uses: ./.github/workflows/Terraform.yaml
-        with:
-          calling_job_name: resourcegroup
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+            selective-loop:
+              runs-on: ubuntu-latest
+              strategy:
+                matrix:
+                  dir: [resourcegroup, dir2, dir3]
+                  include:
+                    - dir: dir2
+          
+              steps:
+                      - name: Checkout code
+                        uses: actions/checkout@v2
+                
+                      - name: Setup Terraform
+                        uses: hashicorp/setup-terraform@v3
+                        with:
+                          terraform_version: 1.9.8
+                
+                      - name: Terraform Init
+                        if: ${{ matrix.dir == github.event.inputs.target_directory }}
+                        working-directory: ${{ matrix.dir }}
+                        run: |
+                          ls -Flah
+                          terraform init 
+                
+                      - name: Terraform Validate
+                        id: valid
+                        run: terraform validate
+                
+                      - name: Terraform Plan
+                        if: success() && steps.valid.outcome == 'success'
+                        id: plan
+                        run: terraform plan 
+                
+                      - name: Terraform Apply
+                        if: success() && steps.plan.outcome == 'success'
+                        run: terraform apply -auto-approve
+                
